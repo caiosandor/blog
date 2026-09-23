@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+
+{% block conteudo %}
+<h1>Cadastrar Novo Post</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <div style="margin-top: 20px;">
+        <button type="submit">Salvar Notícia</button>
+        <a href="{% url 'lista' %}" style="margin-left: 15px; color: #e74c3c; text-decoration: none; font-weight: bold;">Cancelar</a>
+    </div>
+</form>
+{% endblock %}
