@@ -68,8 +68,3 @@ def excluir_post(request, id):
 
 
 
-
-feat: finaliza CRUD e adiciona busca dinâmica na listagem
-
-- Utiliza Q() para permitir filtros combinados ou isolados por nome e status.
-- Cria as views, rotas e templates para as ações de editar e excluir notícias.
