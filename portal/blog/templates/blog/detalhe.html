@@ -11,10 +11,8 @@
 </div>
 
 <div style="margin-top: 40px;">
-    <a href="{% url 'lista' %}" class="btn">&larr; Voltar para a lista</a>
+    <a href="{% url 'editar' post.id %}" class="btn" style="background-color: #f1c40f; color: #333; margin-right: 10px;">Editar</a>
+    <a href="{% url 'excluir' post.id %}" class="btn" style="background-color: #e74c3c; margin-right: 10px;">Excluir</a>
+    <a href="{% url 'lista' %}" class="btn" style="background-color: #95a5a6;">&larr; Voltar para a lista</a>
 </div>
 {% endblock %}
-
-
-
-
