@@ -19,5 +19,10 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    
+    # mantem o html antigo
     path("", include("blog.urls")),
+    
+    # joga as rotas da api pro arquivo novo
+    path("api/", include("blog.api_urls")),
 ]
