@@ -1,0 +1,7 @@
+# Ignorar variáveis de ambiente
+.env
+
+# Aproveita e já ignora a pasta da venv e o banco SQLite
+venv/
+db.sqlite3
+__pycache__/
