@@ -2,9 +2,12 @@ from rest_framework import serializers
 from .models import Post
 
 class PostSerializer(serializers.ModelSerializer):
+    # mostra o nome do autor legivel no json em vez do id
+    autor = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Post
-        # Regra da aula: Listar os campos explicitamente. Evitar o uso de "__all__".
+        # listo os campos direto sem usar __all__
         fields = [
             'id', 
             'titulo', 
@@ -16,14 +19,10 @@ class PostSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        """
-        Validação de regras de negócio (Substitui o clean() do forms.py).
-        Garante que a API não aceite posts inválidos vindos do Postman/Frontend.
-        """
+        # trava a api e devolve erro 400 em json se a regra quebrar
         status = data.get('status')
         conteudo = data.get('conteudo')
 
-        # Regra da P1: Validar tamanho mínimo se o status for "publicado"
         if status == 'publicado' and conteudo:
             if len(conteudo.strip()) < 50:
                 raise serializers.ValidationError(
