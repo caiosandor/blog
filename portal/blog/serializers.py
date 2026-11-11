@@ -2,24 +2,26 @@ from rest_framework import serializers
 from .models import Post
 
 class PostSerializer(serializers.ModelSerializer):
-    # mostra o nome do autor legivel no json em vez do id
+    # Converte os IDs de autor e pagina para os nomes legiveis no JSON
     autor = serializers.StringRelatedField(read_only=True)
+    pagina = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Post
-        # listo os campos direto sem usar __all__
+        # Define os campos exatos que serao serializados
         fields = [
             'id', 
             'titulo', 
             'conteudo', 
             'autor', 
+            'pagina',
             'status', 
             'criado_em', 
             'atualizado_em'
         ]
 
     def validate(self, data):
-        # trava a api e devolve erro 400 em json se a regra quebrar
+        # Valida as regras antes de aceitar a requisicao da API
         status = data.get('status')
         conteudo = data.get('conteudo')
 
