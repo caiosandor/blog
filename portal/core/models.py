@@ -11,8 +11,8 @@ class Pagina(models.Model):
 
 # Base abstrata para compartilhar a ForeignKey com os models de negócio sem duplicar código
 class DaOrganizacao(models.Model):
-    # Aceita nulo temporariamente para não quebrar o banco na migração dos dados legados
-    pagina = models.ForeignKey(Pagina, on_delete=models.PROTECT, null=True)
+    # Torna o vinculo obrigatorio para todos os novos inserts no banco
+    pagina = models.ForeignKey(Pagina, on_delete=models.PROTECT)
 
     class Meta:
         abstract = True
