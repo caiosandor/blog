@@ -1,15 +1,95 @@
 {% extends 'blog/base.html' %}
 
-{% block conteudo %}
-<h1>Cadastrar Novo Post</h1>
+{% block title %}{% if post %}Editar Matéria{% else %}Nova Matéria{% endif %}{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    
-    <div style="margin-top: 20px;">
-        <button type="submit">Salvar Notícia</button>
-        <a href="{% url 'lista' %}" style="margin-left: 15px; color: #e74c3c; text-decoration: none; font-weight: bold;">Cancelar</a>
+{% block extra_css %}
+<style>
+    .editor-card {
+        max-width: 760px;
+        margin: 0 auto;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2.25rem;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+    }
+
+    .editor-header {
+        margin-bottom: 1.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .editor-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .editor-form p {
+        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .editor-form label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .editor-form input[type="text"],
+    .editor-form textarea,
+    .editor-form select {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-family: inherit;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        background-color: #ffffff;
+        outline: none;
+        transition: border-color 0.15s;
+    }
+
+    .editor-form input[type="text"]:focus,
+    .editor-form textarea:focus,
+    .editor-form select:focus {
+        border-color: var(--primary);
+    }
+
+    .editor-form textarea {
+        min-height: 240px;
+        line-height: 1.65;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--border);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="editor-card">
+        <div class="editor-header">
+            <h1>{% if post %}Editar Matéria{% else %}Escrever Nova Matéria{% endif %}</h1>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">Preencha os campos abaixo para publicar ou salvar como rascunho</p>
+        </div>
+
+        <form method="post" class="editor-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="form-actions">
+                <a href="{% url 'lista' %}" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Salvar Matéria</button>
+            </div>
+        </form>
     </div>
-</form>
 {% endblock %}

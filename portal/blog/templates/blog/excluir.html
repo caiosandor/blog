@@ -1,13 +1,18 @@
 {% extends 'blog/base.html' %}
 
-{% block conteudo %}
-<h1 style="border-bottom-color: #e74c3c;">Confirmar Exclusão</h1>
+{% block title %}Confirmar Exclusão{% endblock %}
 
-<p>Tem certeza que deseja excluir a notícia "<strong>{{ post.titulo }}</strong>"? Esta ação não pode ser desfeita.</p>
+{% block content %}
+    <div style="max-width: 520px; margin: 3rem auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: 1rem; padding: 2rem; text-align: center;">
+        <h1 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.75rem;">Excluir Matéria?</h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.75rem;">
+            Tem certeza que deseja excluir permanentemente <strong>"{{ post.titulo }}"</strong>? Esta ação não pode ser desfeita.
+        </p>
 
-<form method="POST" style="margin-top: 30px;">
-    {% csrf_token %}
-    <button type="submit" style="background-color: #e74c3c;">Sim, excluir notícia</button>
-    <a href="{% url 'detalhe' post.id %}" style="margin-left: 15px; color: #7f8c8d; text-decoration: none; font-weight: bold;">Cancelar</a>
-</form>
+        <form method="post" style="display: flex; justify-content: center; gap: 0.75rem;">
+            {% csrf_token %}
+            <a href="{% url 'detalhe' post.id %}" class="btn btn-outline">Cancelar</a>
+            <button type="submit" class="btn btn-danger">Sim, excluir matéria</button>
+        </form>
+    </div>
 {% endblock %}

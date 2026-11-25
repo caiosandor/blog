@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
     # Rotas de interface web (templates HTML)
     path('', views.lista_posts, name='lista'),
-    path('novo/', views.criar_post, name='criar'),
+    path('novo/', views.criar_post, name='criar_post'),
     path('rascunhos/', views.lista_rascunhos, name='rascunhos'),
     path('post/<int:id>/', views.post_detalhe, name='detalhe'),
     path('post/<int:id>/editar/', views.editar_post, name='editar'),

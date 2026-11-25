@@ -1,22 +1,36 @@
 {% extends 'blog/base.html' %}
 
-{% block conteudo %}
-<h1 style="border-bottom-color: #f39c12;">Meus Rascunhos 📝</h1>
+{% block title %}Rascunhos da Redação{% endblock %}
 
-<p style="text-align: right;">
-    <a href="{% url 'lista' %}" class="btn" style="background-color: #7f8c8d;">Voltar para Notícias</a>
-</p>
+{% block content %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 2px solid var(--text-main);">
+        <div>
+            <h1 style="font-size: 1.75rem; font-weight: 700;">Rascunhos</h1>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">Matérias em revisão aguardando publicação</p>
+        </div>
+        <a href="{% url 'criar_post' %}" class="btn btn-primary">+ Novo Rascunho</a>
+    </div>
 
-<ul style="list-style-type: none; padding: 0;">
-{% for post in posts %}
-    <li style="background: #fdfae6; margin-bottom: 15px; padding: 15px; border-radius: 5px; border-left: 5px solid #f39c12;">
-        <a href="{% url 'detalhe' post.id %}" style="text-decoration: none; color: #2c3e50;">
-            <strong style="font-size: 1.2em;">{{ post.titulo }}</strong>
-        </a><br>
-        <small style="color: #7f8c8d;">Autor: {{ post.autor }} | Status: {{ post.status }}</small>
-    </li>
-{% empty %}
-    <li style="text-align: center; color: #7f8c8d; padding: 20px;">Você não tem nenhum rascunho no momento.</li>
-{% endfor %}
-</ul>
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for post in posts %}
+            <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+                <div>
+                    <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">
+                        <a href="{% url 'detalhe' post.id %}" style="color: var(--text-main); text-decoration: none;">{{ post.titulo }}</a>
+                    </h2>
+                    <span style="font-size: 0.8125rem; color: var(--text-muted);">
+                        Autor: <strong>{{ post.autor.username }}</strong> • Criado em {{ post.criado_em|date:"d/m/Y H:i" }}
+                    </span>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="{% url 'editar' post.id %}" class="btn btn-outline">Continuar Editando</a>
+                    <a href="{% url 'excluir' post.id %}" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        {% empty %}
+            <div style="background: var(--bg-card); border: 1px dashed var(--border); border-radius: 0.75rem; padding: 3rem; text-align: center; color: var(--text-muted);">
+                <p>Nenhum rascunho pendente no momento.</p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

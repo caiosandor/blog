@@ -2,70 +2,268 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Portal de Notícias</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portal Editorial{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        /* Estilos básicos para deixar tudo mais bonito */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent-bg: #eff6ff;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        /* Estilo dos botões e links */
-        a.btn, button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        a.btn:hover, button:hover {
-            background-color: #2980b9;
-        }
-        /* Estilo do formulário */
-        form p {
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-        input, textarea, select {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+
+        /* Navbar Editorial */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .navbar-inner {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-logo {
+            background-color: var(--text-main);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .brand-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background-color: var(--accent-bg);
+            color: var(--primary);
+            padding: 0.2rem 0.55rem;
+            border-radius: 9999px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+        }
+
+        .nav-user {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            padding-left: 0.75rem;
+            border-left: 1px solid var(--border);
+        }
+
+        /* Botões globais */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.15s;
             font-family: inherit;
         }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: var(--bg-card);
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        /* Container principal */
+        .main-container {
+            max-width: 1120px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        /* Alertas / Mensagens Django */
+        .messages {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .message-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: var(--accent-bg);
+            color: var(--primary);
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Rodapé */
+        .footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+        }
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <div class="container">
-        
-        <!-- Mostra a data e hora atual -->
-        <div style="text-align: center; color: #bdc3c7; font-size: 0.9em; margin-bottom: 20px; border-bottom: 1px solid #ecf0f1; padding-bottom: 10px;">
-            📅 Hoje é {% now "d/m/Y" %} às {% now "H:i" %}
-        </div>
 
-        {% block conteudo %}
-        {% endblock %}
-        
-    </div>
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a href="{% url 'lista' %}" class="brand">
+                <span class="brand-logo">RT</span>
+                <span class="brand-name">
+                    {% if user.is_authenticated and user.perfilfuncionario %}
+                        {{ user.perfilfuncionario.pagina.nome }}
+                    {% else %}
+                        Portal Editorial
+                    {% endif %}
+                </span>
+                <span class="brand-tag">Edição Digital</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="{% url 'lista' %}" class="nav-link">Últimas Notícias</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'rascunhos' %}" class="nav-link">Rascunhos</a>
+                    <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                    <a href="{% url 'criar_post' %}" class="btn btn-primary">+ Nova Matéria</a>
+                    <span class="nav-user">@{{ user.username }}</span>
+                {% else %}
+                    <a href="/admin/login/?next=/" class="btn btn-outline">Entrar</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message-item">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>
+            {% if user.is_authenticated and user.perfilfuncionario %}
+                {{ user.perfilfuncionario.pagina.nome }} — Redação &amp; Publicação Digital
+            {% else %}
+                Portal Editorial Multi-Tenant
+            {% endif %}
+        </p>
+    </footer>
+
 </body>
 </html>

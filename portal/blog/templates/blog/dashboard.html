@@ -3,61 +3,457 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard — {{ pagina.nome }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --accent-bg: #eff6ff;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Navbar superior */
+        .navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .badge-tenant {
+            background-color: var(--accent-bg);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.625rem;
+            border-radius: 9999px;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.15s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1140px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Cabeçalho da página + Filtro */
+        .header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .filter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .filter-group input[type="date"] {
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.375rem 0.625rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .filter-group input[type="date"]:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: var(--bg-card);
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Grid de KPIs */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .kpi-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: var(--text-main);
+        }
+
+        /* Painéis de conteúdo */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Tabela limpa */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th:last-child, td:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 0.85rem 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 1.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        /* Lista de status */
+        .status-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-body);
+            border-radius: 0.5rem;
+        }
+
+        .status-badge {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.375rem;
+        }
+
+        .status-publicado {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        .status-rascunho {
+            background-color: var(--warning-bg);
+            color: var(--warning-text);
+        }
+
+        .status-count {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dashboard — {{ pagina.nome }}</h1>
 
-    <form method="get">
-        {{ form.as_p }}
-        <button type="submit">Filtrar</button>
-        <a href="{% url 'dashboard' %}">Limpar</a>
-    </form>
+    <nav class="navbar">
+        <a href="{% url 'lista' %}" class="navbar-brand">
+            <span>{{ pagina.nome }}</span>
+            <span class="badge-tenant">Portal Editorial</span>
+        </a>
+        <div class="navbar-actions">
+            <a href="{% url 'lista' %}" class="nav-link">Publicações</a>
+            <a href="{% url 'rascunhos' %}" class="nav-link">Rascunhos</a>
+            <a href="{% url 'criar_post' %}" class="btn btn-primary">+ Novo Post</a>
+        </div>
+    </nav>
 
-    {% if pode_exportar %}
-        <p><a href="{% url 'exportar-posts-csv' %}?{{ request.GET.urlencode }}">Exportar CSV</a></p>
-    {% endif %}
+    <main class="container">
+        <div class="header-bar">
+            <div class="header-title">
+                <h1>Dashboard Editorial</h1>
+                <p>Métricas de desempenho e volume de publicações da organização</p>
+            </div>
 
-    <div>
-        <div><small>Total de Posts:</small> <strong>{{ kpis.total_posts }}</strong></div>
-        <div><small>Publicados:</small> <strong>{{ kpis.publicados }}</strong></div>
-        <div><small>Rascunhos:</small> <strong>{{ kpis.rascunhos }}</strong></div>
-        <div><small>Autores Ativos:</small> <strong>{{ kpis.autores_ativos }}</strong></div>
-    </div>
+            <form method="get" class="filter-card">
+                <div class="filter-group">
+                    <label for="id_inicio">De:</label>
+                    {{ form.inicio }}
+                </div>
+                <div class="filter-group">
+                    <label for="id_fim">Até:</label>
+                    {{ form.fim }}
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Limpar</a>
+                {% if pode_exportar %}
+                    <a href="{% url 'exportar-posts-csv' %}?{{ request.GET.urlencode }}" class="btn btn-outline">Exportar CSV</a>
+                {% endif %}
+            </form>
+        </div>
 
-    <h2>Top 5 Autores</h2>
-    <table>
-        <thead>
-            <tr><th>Autor</th><th>Posts</th></tr>
-        </thead>
-        <tbody>
-            {% for item in ranking_autores %}
-                <tr>
-                    <td>{{ item.autor__first_name|default:item.autor__username }}</td>
-                    <td>{{ item.total }}</td>
-                </tr>
-            {% empty %}
-                <tr><td colspan="2">Sem publicações no período.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <!-- Cartões de KPIs -->
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total de Posts</div>
+                <div class="kpi-value">{{ kpis.total_posts }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Publicados</div>
+                <div class="kpi-value" style="color: #16a34a;">{{ kpis.publicados }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Rascunhos</div>
+                <div class="kpi-value" style="color: #d97706;">{{ kpis.rascunhos }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Autores Ativos</div>
+                <div class="kpi-value" style="color: #2563eb;">{{ kpis.autores_ativos }}</div>
+            </div>
+        </section>
 
-    <h2>Distribuição por Status</h2>
-    <ul>
-        {% for item in distribuicao_status %}
-            <li>{{ item.status|capfirst }}: {{ item.total }}</li>
-        {% empty %}
-            <li>Sem dados no período.</li>
-        {% endfor %}
-    </ul>
+        <!-- Ranking e Distribuição -->
+        <section class="content-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Top 5 Autores</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Autor</th>
+                            <th>Publicações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in ranking_autores %}
+                            <tr>
+                                <td><strong>{{ item.autor__first_name|default:item.autor__username }}</strong></td>
+                                <td>{{ item.total }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="empty-state">Nenhuma publicação registrada neste período.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    {% if mostra_series %}
-        <h2>Publicações por Mês</h2>
-        <canvas id="graf-mes"></canvas>
-        <!-- Serialização segura dos dados para consumo no JavaScript -->
-        {{ por_mes|json_script:"dados-mes" }}
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script src="{% static 'js/dashboard.js' %}"></script>
-    {% endif %}
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Distribuição por Status</h2>
+                </div>
+                <ul class="status-list">
+                    {% for item in distribuicao_status %}
+                        <li class="status-item">
+                            <span class="status-badge status-{{ item.status }}">
+                                {{ item.status|capfirst }}
+                            </span>
+                            <span class="status-count">{{ item.total }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="empty-state">Sem dados disponíveis no período.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </section>
+
+        <!-- Série Temporal (Apenas Administradores) -->
+        {% if mostra_series %}
+            <section class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Evolução de Publicações por Mês</h2>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="graf-mes"></canvas>
+                </div>
+                {{ por_mes|json_script:"dados-mes" }}
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script src="{% static 'js/dashboard.js' %}"></script>
+            </section>
+        {% endif %}
+    </main>
+
 </body>
 </html>

@@ -1,37 +1,288 @@
 {% extends 'blog/base.html' %}
 
-{% block conteudo %}
-<h1>Últimas Notícias</h1>
+{% block title %}Últimas Notícias — Capa{% endblock %}
 
-<p style="text-align: right;">
-    <a href="{% url 'rascunhos' %}" class="btn" style="background-color: #f39c12; margin-right: 10px;">Ver Rascunhos</a>
-    <a href="{% url 'criar_post' %}" class="btn">+ Nova Notícia</a>
-</p>
+{% block extra_css %}
+<style>
+    .editorial-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 1.25rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--text-main);
+        margin-bottom: 2rem;
+    }
 
-<!-- Feature 1 P1: Formulário de Busca e Filtro -->
-<form method="GET" action="{% url 'lista' %}" style="margin-bottom: 20px; background: #ecf0f1; padding: 15px; border-radius: 5px;">
-    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar por título..." style="width: 40%; display: inline-block;">
-    
-    <select name="status" style="width: 30%; display: inline-block;">
-        <option value="">Todos os Status</option>
-        <option value="publicado" {% if request.GET.status == 'publicado' %}selected{% endif %}>Publicado</option>
-        <option value="rascunho" {% if request.GET.status == 'rascunho' %}selected{% endif %}>Rascunho</option>
-    </select>
-    
-    <button type="submit" style="display: inline-block;">Filtrar</button>
-    <a href="{% url 'lista' %}" style="margin-left: 10px; color: #7f8c8d; text-decoration: none;">Limpar</a>
-</form>
+    .editorial-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+    }
 
-<ul style="list-style-type: none; padding: 0;">
-{% for post in posts %}
-    <li style="background: #ecf0f1; margin-bottom: 15px; padding: 15px; border-radius: 5px; border-left: 5px solid #3498db;">
-        <a href="{% url 'detalhe' post.id %}" style="text-decoration: none; color: #2c3e50;">
-            <strong style="font-size: 1.2em;">{{ post.titulo }}</strong>
-        </a><br>
-        <small style="color: #7f8c8d;">Publicado por {{ post.autor }} | Status: {{ post.status }}</small>
-    </li>
-{% empty %}
-    <li style="text-align: center; color: #7f8c8d; padding: 20px;">Nenhuma notícia encontrada com estes filtros.</li>
-{% endfor %}
-</ul>
+    .editorial-subtitle {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-top: 0.35rem;
+    }
+
+    /* Barra de busca integrada */
+    .search-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .search-input, .search-select {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-family: inherit;
+        background-color: var(--bg-card);
+        color: var(--text-main);
+        outline: none;
+    }
+
+    .search-input {
+        min-width: 220px;
+    }
+
+    .search-input:focus, .search-select:focus {
+        border-color: var(--primary);
+    }
+
+    /* Artigo em destaque (Hero) */
+    .featured-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2.25rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 0;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .featured-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+    }
+
+    .featured-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--primary);
+    }
+
+    .featured-title {
+        font-size: 1.85rem;
+        font-weight: 700;
+        line-height: 1.25;
+        letter-spacing: -0.025em;
+        color: var(--text-main);
+        text-decoration: none;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .featured-title:hover {
+        color: var(--primary);
+    }
+
+    .featured-excerpt {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.65;
+        max-width: 78ch;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    /* Grade de artigos secundários */
+    .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .article-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 0.875rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1rem;
+        min-width: 0;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .article-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+    }
+
+    .article-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.35;
+        color: var(--text-main);
+        text-decoration: none;
+        display: block;
+        margin-bottom: 0.5rem;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .article-title:hover {
+        color: var(--primary);
+    }
+
+    .article-excerpt {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .article-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.875rem;
+        border-top: 1px solid #f1f5f9;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+    }
+
+    .status-pill {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.15rem 0.55rem;
+        border-radius: 9999px;
+    }
+
+    .status-publicado {
+        background-color: var(--success-bg);
+        color: var(--success-text);
+    }
+
+    .status-rascunho {
+        background-color: var(--warning-bg);
+        color: var(--warning-text);
+    }
+
+    .read-more {
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.85rem;
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+
+    .empty-box {
+        background-color: var(--bg-card);
+        border: 1px dashed var(--border);
+        border-radius: 1rem;
+        padding: 3.5rem 1.5rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="editorial-header">
+        <div>
+            <h1>Últimas Notícias</h1>
+            <p class="editorial-subtitle">Acompanhe as publicações, análises e novidades da redação</p>
+        </div>
+
+        <form method="get" action="{% url 'lista' %}" class="search-bar">
+            <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Buscar matéria..." class="search-input">
+            <select name="status" class="search-select">
+                <option value="">Todos os status</option>
+                <option value="publicado" {% if request.GET.status == 'publicado' %}selected{% endif %}>Publicado</option>
+                <option value="rascunho" {% if request.GET.status == 'rascunho' %}selected{% endif %}>Rascunho</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            {% if request.GET.q or request.GET.status %}
+                <a href="{% url 'lista' %}" class="btn btn-outline">Limpar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% for post in posts %}
+        {% if forloop.first %}
+            <!-- Matéria Principal em Destaque -->
+            <article class="featured-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="featured-badge">★ Destaque da Edição</span>
+                    <span class="status-pill status-{{ post.status }}">{{ post.get_status_display }}</span>
+                </div>
+
+                <h2>
+                    <a href="{% url 'detalhe' post.id %}" class="featured-title">{{ post.titulo }}</a>
+                </h2>
+
+                <p class="featured-excerpt">{{ post.conteudo|truncatewords:45 }}</p>
+
+                <div class="article-meta">
+                    <span>Por <strong>{{ post.autor.get_full_name|default:post.autor.username }}</strong> • {{ post.criado_em|date:"d/m/Y \à\s H:i" }}</span>
+                    <a href="{% url 'detalhe' post.id %}" class="read-more">Ler matéria completa →</a>
+                </div>
+            </article>
+
+            {% if posts|length > 1 %}
+                <div class="articles-grid">
+            {% endif %}
+        {% else %}
+            <!-- Demais Matérias em Grade -->
+            <article class="article-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">{{ post.criado_em|date:"d M Y" }}</span>
+                        <span class="status-pill status-{{ post.status }}">{{ post.get_status_display }}</span>
+                    </div>
+                    <h3>
+                        <a href="{% url 'detalhe' post.id %}" class="article-title">{{ post.titulo }}</a>
+                    </h3>
+                    <p class="article-excerpt">{{ post.conteudo|truncatewords:24 }}</p>
+                </div>
+
+                <div class="article-meta">
+                    <span>Por <strong>{{ post.autor.get_full_name|default:post.autor.username }}</strong></span>
+                    <a href="{% url 'detalhe' post.id %}" class="read-more">Ler mais →</a>
+                </div>
+            </article>
+
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+        {% endif %}
+    {% empty %}
+        <div class="empty-box">
+            <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Nenhuma publicação encontrada</h3>
+            <p style="margin-bottom: 1.25rem;">Ainda não há matérias correspondentes ao filtro atual.</p>
+            <a href="{% url 'criar_post' %}" class="btn btn-primary">+ Escrever primeira matéria</a>
+        </div>
+    {% endfor %}
 {% endblock %}
