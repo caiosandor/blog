@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.views import LogoutView
 from . import views
 
 urlpatterns = [
@@ -13,4 +14,7 @@ urlpatterns = [
     # Rotas do dashboard gerencial e exportação CSV
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/exportar-csv/', views.exportar_posts_csv, name='exportar-posts-csv'),
+
+    # Rota de encerramento de sessão (Logout via POST)
+    path('sair/', LogoutView.as_view(next_page='/admin/login/?next=/'), name='logout'),
 ]
