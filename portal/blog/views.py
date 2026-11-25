@@ -1,101 +1,129 @@
 import csv
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets, permissions
-from .models import Post
-from .forms import PostForm, filtrar_periodo
-from .serializers import PostSerializer
+from django.shortcuts import get_object_or_404, redirect, render
+
 from .dashboard import obter_metricas_dashboard
+from .forms import PostForm, filtrar_periodo
+from .models import Post
 
 
-@login_required
+def _obter_perfil(user):
+    if not user.is_authenticated:
+        return None
+    return getattr(user, 'perfilfuncionario', None)
+
+
 def lista_posts(request):
-    # Uso de select_related para evitar consultas N+1 ao acessar dados do autor
-    posts = Post.objects.filter(
-        pagina=request.user.perfilfuncionario.pagina
-    ).select_related('autor')
-    
-    busca_texto = request.GET.get('q')
-    busca_status = request.GET.get('status')
-    
-    filtros = Q()
-    if busca_texto:
-        filtros &= Q(titulo__icontains=busca_texto)
-    if busca_status:
-        filtros &= Q(status=busca_status)
-        
-    if filtros:
-        posts = posts.filter(filtros)
+    perfil = _obter_perfil(request.user)
+    if perfil:
+        posts = Post.objects.filter(pagina=perfil.pagina).select_related('autor')
     else:
-        posts = posts.filter(status='publicado')
+        posts = Post.objects.filter(status='publicado').select_related('autor')
 
+    busca = request.GET.get('q', '').strip()
+    if busca:
+        posts = posts.filter(Q(titulo__icontains=busca) | Q(conteudo__icontains=busca))
+
+    status_filtro = request.GET.get('status', '').strip()
+    if status_filtro in ('publicado', 'rascunho'):
+        posts = posts.filter(status=status_filtro)
+
+    posts = posts.order_by('-criado_em')
     return render(request, 'blog/lista.html', {'posts': posts})
 
 
 @login_required
+def lista_rascunhos(request):
+    perfil = _obter_perfil(request.user)
+    if perfil is None:
+        return HttpResponseForbidden('Usuário sem perfil de funcionário associado a uma página.')
+
+    posts = (
+        Post.objects.filter(pagina=perfil.pagina, status='rascunho')
+        .select_related('autor')
+        .order_by('-criado_em')
+    )
+    return render(request, 'blog/rascunhos.html', {'posts': posts})
+
+
+def post_detalhe(request, id):
+    perfil = _obter_perfil(request.user)
+    if perfil:
+        post = get_object_or_404(Post.objects.select_related('autor'), id=id, pagina=perfil.pagina)
+    else:
+        post = get_object_or_404(Post.objects.select_related('autor'), id=id, status='publicado')
+
+    return render(request, 'blog/detalhe.html', {'post': post})
+
+
+@login_required
 def criar_post(request):
+    perfil = _obter_perfil(request.user)
+    if perfil is None:
+        return HttpResponseForbidden('Usuário sem perfil de funcionário associado a uma página.')
+
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
             post.autor = request.user
-            post.pagina = request.user.perfilfuncionario.pagina
+            post.pagina = perfil.pagina
             post.save()
-            return redirect('lista')
+            messages.success(request, 'Matéria salva com sucesso.')
+            return redirect('detalhe', id=post.id)
     else:
         form = PostForm()
+
     return render(request, 'blog/form.html', {'form': form})
 
 
 @login_required
-def post_detalhe(request, id):
-    post = get_object_or_404(
-        Post.objects.select_related('autor'),
-        id=id,
-        pagina=request.user.perfilfuncionario.pagina
-    )
-    return render(request, 'blog/detalhe.html', {'post': post})
-
-
-@login_required
-def lista_rascunhos(request):
-    rascunhos = Post.objects.filter(
-        pagina=request.user.perfilfuncionario.pagina,
-        status='rascunho'
-    ).select_related('autor')
-    return render(request, 'blog/rascunhos.html', {'posts': rascunhos})
-
-
-@login_required
 def editar_post(request, id):
-    post = get_object_or_404(Post, id=id, pagina=request.user.perfilfuncionario.pagina)
+    perfil = _obter_perfil(request.user)
+    if perfil is None:
+        return HttpResponseForbidden('Usuário sem perfil de funcionário associado a uma página.')
+
+    post = get_object_or_404(Post, id=id, pagina=perfil.pagina)
+
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Matéria atualizada com sucesso.')
             return redirect('detalhe', id=post.id)
     else:
         form = PostForm(instance=post)
-    
+
     return render(request, 'blog/form.html', {'form': form, 'post': post})
 
 
 @login_required
 def excluir_post(request, id):
-    post = get_object_or_404(Post, id=id, pagina=request.user.perfilfuncionario.pagina)
+    perfil = _obter_perfil(request.user)
+    if perfil is None:
+        return HttpResponseForbidden('Usuário sem perfil de funcionário associado a uma página.')
+
+    post = get_object_or_404(Post, id=id, pagina=perfil.pagina)
+
     if request.method == 'POST':
         post.delete()
+        messages.success(request, 'Matéria excluída com sucesso.')
         return redirect('lista')
+
     return render(request, 'blog/excluir.html', {'post': post})
 
 
 @login_required
 def dashboard_view(request):
-    perfil = request.user.perfilfuncionario
-    minha_pagina = perfil.pagina
+    perfil = _obter_perfil(request.user)
+    if perfil is None:
+        return HttpResponseForbidden('Usuário sem perfil de funcionário associado a uma página.')
 
+    minha_pagina = perfil.pagina
     base_qs = Post.objects.filter(pagina=minha_pagina)
     qs_filtrada, form = filtrar_periodo(request, base_qs)
 
@@ -113,8 +141,8 @@ def dashboard_view(request):
 
 @login_required
 def exportar_posts_csv(request):
-    perfil = request.user.perfilfuncionario
-    if not perfil.eh_admin:
+    perfil = _obter_perfil(request.user)
+    if perfil is None or not perfil.eh_admin:
         return HttpResponseForbidden('Acesso restrito a administradores da página.')
 
     minha_pagina = perfil.pagina
@@ -132,7 +160,6 @@ def exportar_posts_csv(request):
     writer.writerow(['Título', 'Autor', 'Status', 'Criado em', 'Atualizado em'])
 
     for post in qs_filtrada:
-        # Sanitização para prevenir injeção de fórmulas em planilhas (CSV Injection)
         titulo = post.titulo
         if titulo and titulo[0] in ('=', '+', '-', '@'):
             titulo = f"'{titulo}"
@@ -148,20 +175,6 @@ def exportar_posts_csv(request):
     return response
 
 
-class PostViewSet(viewsets.ModelViewSet):
-    serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        if hasattr(user, 'perfilfuncionario'):
-            return Post.objects.filter(
-                pagina=user.perfilfuncionario.pagina
-            ).select_related('autor')
-        return Post.objects.none() 
-
-    def perform_create(self, serializer):
-        serializer.save(
-            autor=self.request.user, 
-            pagina=self.request.user.perfilfuncionario.pagina
-        )
+def sair_view(request):
+    logout(request)
+    return redirect('/admin/login/?next=/')
