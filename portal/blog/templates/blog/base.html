@@ -238,7 +238,7 @@
                     <span class="nav-user">@{{ user.username }}</span>
                     <a href="{% url 'logout' %}" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8125rem;">Sair</a>
                 {% else %}
-                    <a href="/admin/login/?next=/" class="btn btn-outline">Entrar</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline">Entrar</a>
                 {% endif %}
             </nav>
         </div>

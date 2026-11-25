@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth.views import LoginView
 from . import views
 
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/exportar-csv/', views.exportar_posts_csv, name='exportar-posts-csv'),
 
-    # Rota de encerramento de sessão
+    # Rotas de autenticação do portal
+    path('entrar/', LoginView.as_view(template_name='blog/login.html'), name='login'),
     path('sair/', views.sair_view, name='logout'),
 ]

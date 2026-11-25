@@ -1,0 +1,105 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Entrar — Portal Editorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-wrapper {
+        max-width: 420px;
+        margin: 3rem auto;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2.25rem;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 1.75rem;
+    }
+
+    .login-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+    }
+
+    .login-header p {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.15rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        color: var(--text-main);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+    }
+
+    .form-group input:focus {
+        border-color: var(--primary);
+    }
+
+    .error-box {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        margin-bottom: 1.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="login-wrapper">
+        <div class="login-header">
+            <h1>Acesso à Redação</h1>
+            <p>Entre com suas credenciais para gerenciar publicações e métricas</p>
+        </div>
+
+        {% if form.errors %}
+            <div class="error-box">
+                Usuário ou senha inválidos. Verifique os dados e tente novamente.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="form-group">
+                <label for="id_username">Usuário</label>
+                <input type="text" name="username" id="id_username" autofocus required placeholder="Digite seu usuário">
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Senha</label>
+                <input type="password" name="password" id="id_password" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.65rem;">
+                Entrar no Portal
+            </button>
+        </form>
+    </div>
+{% endblock %}

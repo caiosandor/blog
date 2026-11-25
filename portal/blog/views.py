@@ -177,4 +177,4 @@ def exportar_posts_csv(request):
 
 def sair_view(request):
     logout(request)
-    return redirect('/admin/login/?next=/')
+    return redirect('login')
