@@ -104,7 +104,7 @@
         .nav-menu {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 1.15rem;
             flex-wrap: wrap;
         }
 
@@ -120,11 +120,32 @@
             color: var(--text-main);
         }
 
-        .nav-user {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-            padding-left: 0.75rem;
-            border-left: 1px solid var(--border);
+        /* Badge de Perfil + Revista */
+        .profile-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.75rem;
+            background-color: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-pill strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .profile-role {
+            background-color: var(--accent-bg);
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.1rem 0.45rem;
+            border-radius: 9999px;
         }
 
         /* Botões globais */
@@ -218,7 +239,13 @@
     <header class="navbar">
         <div class="navbar-inner">
             <a href="{% url 'lista' %}" class="brand">
-                <span class="brand-logo">RT</span>
+                <span class="brand-logo">
+                    {% if user.is_authenticated and user.perfilfuncionario %}
+                        {{ user.perfilfuncionario.pagina.nome|slice:":2"|upper }}
+                    {% else %}
+                        PE
+                    {% endif %}
+                </span>
                 <span class="brand-name">
                     {% if user.is_authenticated and user.perfilfuncionario %}
                         {{ user.perfilfuncionario.pagina.nome }}
@@ -235,7 +262,17 @@
                     <a href="{% url 'rascunhos' %}" class="nav-link">Rascunhos</a>
                     <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
                     <a href="{% url 'criar_post' %}" class="btn btn-primary">+ Nova Matéria</a>
-                    <span class="nav-user">@{{ user.username }}</span>
+
+                    <div class="profile-pill" title="Organização e cargo vinculados ao seu usuário">
+                        <span>@<strong>{{ user.username }}</strong></span>
+                        {% if user.perfilfuncionario %}
+                            <span>• {{ user.perfilfuncionario.pagina.nome }}</span>
+                            <span class="profile-role">{{ user.perfilfuncionario.get_cargo_display }}</span>
+                        {% else %}
+                            <span class="profile-role" style="background: #fee2e2; color: #991b1b;">Sem Revista</span>
+                        {% endif %}
+                    </div>
+
                     <a href="{% url 'logout' %}" class="btn btn-outline" style="padding: 0.35rem 0.75rem; font-size: 0.8125rem;">Sair</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="btn btn-outline">Entrar</a>
@@ -259,7 +296,7 @@
     <footer class="footer">
         <p>
             {% if user.is_authenticated and user.perfilfuncionario %}
-                {{ user.perfilfuncionario.pagina.nome }} — Redação &amp; Publicação Digital
+                Conectado à redação de <strong>{{ user.perfilfuncionario.pagina.nome }}</strong> como <strong>@{{ user.username }}</strong> ({{ user.perfilfuncionario.get_cargo_display }})
             {% else %}
                 Portal Editorial Multi-Tenant
             {% endif %}
