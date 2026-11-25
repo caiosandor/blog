@@ -15,7 +15,9 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('dashboard/exportar-csv/', views.exportar_posts_csv, name='exportar-posts-csv'),
 
-    # Rotas de autenticação do portal
+    # Rotas de autenticação, cadastro de revista e gestão de equipe
     path('entrar/', LoginView.as_view(template_name='blog/login.html'), name='login'),
     path('sair/', views.sair_view, name='logout'),
+    path('cadastrar/', views.cadastrar_revista_view, name='cadastrar'),
+    path('equipe/', views.equipe_view, name='equipe'),
 ]

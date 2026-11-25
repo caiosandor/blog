@@ -1,0 +1,87 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Criar Nova Revista — Portal Editorial{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-card {
+        max-width: 480px;
+        margin: 2.5rem auto;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 2.25rem;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 1.75rem;
+    }
+
+    .register-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .register-header p {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-top: 0.35rem;
+    }
+
+    .reg-form p {
+        margin-bottom: 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .reg-form label {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .reg-form input {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+    }
+
+    .reg-form input:focus {
+        border-color: var(--primary);
+    }
+
+    .errorlist {
+        list-style: none;
+        color: var(--danger);
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="register-card">
+        <div class="register-header">
+            <h1>Criar Nova Revista</h1>
+            <p>Configure seu portal editorial e comece a publicar imediatamente</p>
+        </div>
+
+        <form method="post" class="reg-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.65rem; margin-top: 0.5rem;">
+                Criar Revista e Entrar
+            </button>
+        </form>
+
+        <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 1.25rem;">
+            Já possui uma conta? <a href="{% url 'login' %}" style="color: var(--primary); font-weight: 600; text-decoration: none;">Entrar</a>
+        </p>
+    </div>
+{% endblock %}

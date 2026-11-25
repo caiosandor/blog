@@ -1,13 +1,21 @@
 import csv
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
+from core.models import Pagina, PerfilFuncionario
 from .dashboard import obter_metricas_dashboard
-from .forms import PostForm, filtrar_periodo
+from .forms import (
+    CadastroRevistaForm,
+    NovoMembroEquipeForm,
+    PostForm,
+    filtrar_periodo,
+)
 from .models import Post
 
 
@@ -173,6 +181,71 @@ def exportar_posts_csv(request):
         ])
 
     return response
+
+
+def cadastrar_revista_view(request):
+    if request.method == 'POST':
+        form = CadastroRevistaForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['senha'],
+                    first_name=form.cleaned_data['primeiro_nome'],
+                )
+                pagina = Pagina.objects.create(
+                    nome=form.cleaned_data['nome_revista']
+                )
+                PerfilFuncionario.objects.create(
+                    usuario=user,
+                    pagina=pagina,
+                    cargo='dono',
+                )
+            login(request, user)
+            messages.success(request, f'Revista "{pagina.nome}" criada com sucesso! Bem-vindo à redação.')
+            return redirect('lista')
+    else:
+        form = CadastroRevistaForm()
+
+    return render(request, 'blog/cadastrar.html', {'form': form})
+
+
+@login_required
+def equipe_view(request):
+    perfil = _obter_perfil(request.user)
+    if perfil is None or not perfil.eh_admin:
+        return HttpResponseForbidden('Apenas o dono da revista pode gerenciar a equipe.')
+
+    membros = (
+        PerfilFuncionario.objects.filter(pagina=perfil.pagina)
+        .select_related('usuario')
+        .order_by('cargo', 'usuario__username')
+    )
+
+    if request.method == 'POST':
+        form = NovoMembroEquipeForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                novo_user = User.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['senha'],
+                    first_name=form.cleaned_data['primeiro_nome'],
+                )
+                PerfilFuncionario.objects.create(
+                    usuario=novo_user,
+                    pagina=perfil.pagina,
+                    cargo=form.cleaned_data['cargo'],
+                )
+            messages.success(request, f'Colaborador @{novo_user.username} adicionado à equipe!')
+            return redirect('equipe')
+    else:
+        form = NovoMembroEquipeForm()
+
+    return render(request, 'blog/equipe.html', {
+        'form': form,
+        'membros': membros,
+        'pagina': perfil.pagina,
+    })
 
 
 def sair_view(request):

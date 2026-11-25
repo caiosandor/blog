@@ -1,0 +1,96 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Equipe — {{ pagina.nome }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .team-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 1.75rem;
+        align-items: start;
+    }
+
+    @media (max-width: 768px) {
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card-box {
+        background-color: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1.75rem;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    }
+
+    .team-form p {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .team-form label {
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .team-form input, .team-form select {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-family: inherit;
+        font-size: 0.9rem;
+    }
+
+    .member-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.9rem 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .member-row:last-child {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div style="margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 2px solid var(--text-main);">
+        <h1 style="font-size: 1.75rem; font-weight: 700;">Redação &amp; Equipe</h1>
+        <p style="font-size: 0.875rem; color: var(--text-muted);">Gerencie os editores e administradores de <strong>{{ pagina.nome }}</strong></p>
+    </div>
+
+    <div class="team-grid">
+        <div class="card-box">
+            <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Adicionar Colaborador</h2>
+            <form method="post" class="team-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                    + Criar Acesso na Equipe
+                </button>
+            </form>
+        </div>
+
+        <div class="card-box">
+            <h2 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Membros Ativos ({{ membros|length }})</h2>
+            {% for m in membros %}
+                <div class="member-row">
+                    <div>
+                        <div style="font-weight: 600; color: var(--text-main);">
+                            {{ m.usuario.first_name|default:m.usuario.username }}
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">@{{ m.usuario.username }}</div>
+                    </div>
+                    <span class="profile-role">{{ m.get_cargo_display }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
