@@ -1,0 +1,281 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$oFLpKdtlNcby7bGPKQKIOf$3mVOmekIBKBdStne2IkIpc98byne72Dal98eQjCrAwU=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "caiosandor",
+    "first_name": "",
+    "last_name": "",
+    "email": "caiosandor16@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-04T01:57:15.527Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$Rz3BwN2l6u049hYQ5eCBVM$aU//0mcs0YROeuBh53q7cU2rCP/t1K2gucwtmOw1KyU=",
+    "last_login": "2026-11-25T03:54:53.513Z",
+    "is_superuser": true,
+    "username": "caio",
+    "first_name": "",
+    "last_name": "",
+    "email": "caioteste@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-11T03:21:09.025Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$GJ513nDUy9EePERKziqUNx$Qoz8qUHOOJzMwVCx4rKZg1ibYf0zVMvNfoNYr6RH1IY=",
+    "last_login": "2026-11-25T04:18:05.325Z",
+    "is_superuser": false,
+    "username": "usuario1",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-11T03:25:17Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$UCCA7rxHVrOKJm1bImssDx$RpvsR2RtWAbSywIWX/0zH9kb4557IU76fLN1kx3rsYY=",
+    "last_login": "2026-11-25T03:56:27.627Z",
+    "is_superuser": false,
+    "username": "usuario2",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-11-11T03:25:33Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$njq8IpSQ3w3wb2akR31hSJ$uOeOe6i2tNxl+MB60vo0e4aqMbw0zkRSJkm0KoQSf9U=",
+    "last_login": "2026-11-25T04:17:59.177Z",
+    "is_superuser": false,
+    "username": "usuario3",
+    "first_name": "Caio sandor",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-11-25T04:04:03.597Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "core.pagina",
+  "pk": 1,
+  "fields": {
+    "nome": "Organização padrão",
+    "tag_oficial": "padrao"
+  }
+},
+{
+  "model": "core.pagina",
+  "pk": 2,
+  "fields": {
+    "nome": "Revista Tech",
+    "tag_oficial": "revista-tech"
+  }
+},
+{
+  "model": "core.pagina",
+  "pk": 3,
+  "fields": {
+    "nome": "Blog de Games",
+    "tag_oficial": "blog-games"
+  }
+},
+{
+  "model": "core.pagina",
+  "pk": 4,
+  "fields": {
+    "nome": "Laboratório de Programação Full Stack",
+    "tag_oficial": ""
+  }
+},
+{
+  "model": "core.perfilfuncionario",
+  "pk": 1,
+  "fields": {
+    "usuario": 3,
+    "pagina": 2,
+    "cargo": "editor"
+  }
+},
+{
+  "model": "core.perfilfuncionario",
+  "pk": 2,
+  "fields": {
+    "usuario": 4,
+    "pagina": 3,
+    "cargo": "dono"
+  }
+},
+{
+  "model": "core.perfilfuncionario",
+  "pk": 3,
+  "fields": {
+    "usuario": 5,
+    "pagina": 4,
+    "cargo": "dono"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 1,
+  "fields": {
+    "pagina": 1,
+    "titulo": "teste2",
+    "conteudo": "testetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetestetesteteste",
+    "autor": 1,
+    "status": "publicado",
+    "criado_em": "2026-11-04T02:03:28.573Z",
+    "atualizado_em": "2026-11-04T02:11:36.445Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 2,
+  "fields": {
+    "pagina": 1,
+    "titulo": "exemplo",
+    "conteudo": "exemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemploexemplo",
+    "autor": 1,
+    "status": "publicado",
+    "criado_em": "2026-11-04T02:13:32.055Z",
+    "atualizado_em": "2026-11-04T02:13:32.055Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 3,
+  "fields": {
+    "pagina": 3,
+    "titulo": "teste",
+    "conteudo": "aushaiusdhausdghausdgiaudsgaudsgaiudsgaiusdgaiudgiaudgiuagsdasd",
+    "autor": 4,
+    "status": "publicado",
+    "criado_em": "2026-11-11T03:39:29.550Z",
+    "atualizado_em": "2026-11-11T03:39:29.550Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 4,
+  "fields": {
+    "pagina": 2,
+    "titulo": "exemplo",
+    "conteudo": "aiusdhaudhsiauhduaishdaidahdadsasduihiushdausdghausdasdasd",
+    "autor": 3,
+    "status": "publicado",
+    "criado_em": "2026-11-11T03:41:41.680Z",
+    "atualizado_em": "2026-11-11T03:41:41.680Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 5,
+  "fields": {
+    "pagina": 2,
+    "titulo": "exemplo",
+    "conteudo": "aiusdhaudhsiauhduaishdaidahdadsasduihiushdausdghausdasdasd",
+    "autor": 3,
+    "status": "publicado",
+    "criado_em": "2026-11-11T03:42:44.681Z",
+    "atualizado_em": "2026-11-11T03:42:44.681Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 6,
+  "fields": {
+    "pagina": 2,
+    "titulo": "exemplo",
+    "conteudo": "aiusdhaudhsiauhduaishdaidahdadsasduihiushdausdghausdasdasd",
+    "autor": 3,
+    "status": "publicado",
+    "criado_em": "2026-11-11T03:42:50.198Z",
+    "atualizado_em": "2026-11-11T03:42:50.198Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 7,
+  "fields": {
+    "pagina": 3,
+    "titulo": "teste2",
+    "conteudo": "aisudhasuidhauisdhaiusdhaiudshaiudhaiudshaiudshiauhdasd",
+    "autor": 4,
+    "status": "publicado",
+    "criado_em": "2026-11-11T03:45:29.570Z",
+    "atualizado_em": "2026-11-11T03:45:29.570Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 8,
+  "fields": {
+    "pagina": 2,
+    "titulo": "Por Que o Zero-Trust e a Autenticação Baseada em Tokens Substituíram o Modelo Clássico de Sessão nas APIs Modernas",
+    "conteudo": "Durante décadas, a segurança de aplicações web baseou-se no conceito de perímetro: uma vez que o usuário atravessava a tela de login e recebia um cookie de sessão, presumia-se que todas as requisições seguintes dentro da rede interna eram confiáveis. Com a ascensão de arquiteturas distribuídas, frontends desacoplados e integrações móveis, esse modelo tornou-se insuficiente.\r\n\r\nNa engenharia de software contemporânea, o paradigma Zero-Trust (\"nunca confie, sempre verifique\") exige que cada chamada a uma API carregue sua própria prova criptográfica de identidade e escopo de permissão. É nesse cenário que padrões como JSON Web Tokens (JWT) e fluxos OAuth 2.0 ganharam protagonismo, permitindo validar usuários sem sobrecarregar o banco de dados com consultas de sessão a cada requisição.\r\n\r\nMais do que autenticar quem está do outro lado da tela, o verdadeiro diferencial de uma plataforma segura está na autorização granular. Separar claramente o que um administrador pode exportar ou configurar daquilo que um editor tem permissão para publicar evita vazamentos acidentais e reduz drasticamente a superfície de ataque em ambientes multi-tenant.\r\n\r\nÀ medida que portais digitais evoluem para ecossistemas orientados a dados, tratar segurança e controle de acesso desde a concepção da arquitetura deixa de ser apenas uma exigência técnica e passa a ser um ativo de confiabilidade para toda a operação.",
+    "autor": 3,
+    "status": "publicado",
+    "criado_em": "2026-11-25T03:56:06.360Z",
+    "atualizado_em": "2026-11-25T03:56:06.360Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 9,
+  "fields": {
+    "pagina": 3,
+    "titulo": "GTA 6 e o Retorno a Leonida: Como a Rockstar Eleva a Escala do Mundo Aberto com Inteligência Artificial e Narrativa Dupla",
+    "conteudo": "Poucos lançamentos na história da indústria dos videogames carregam o mesmo peso cultural de Grand Theft Auto VI. Ao levar os jogadores de volta às praias iluminadas por neon de Vice City — agora integrada ao estado fictício de Leonida —, a Rockstar Games aposta não apenas em um mapa significativamente mais denso e verticalizado, mas em um salto técnico na forma como o mundo reage à presença do jogador.\r\n\r\nPela primeira vez na era moderna da franquia, a campanha principal acompanha uma dupla de protagonistas: Lucia e Jason. Essa dinâmica abre espaço para missões coordenadas, tomadas de decisão compartilhadas e abordagens distintas para assaltos e fugas em tempo real, trazendo uma camada cinematográfica mais intimista sem abrir mão da liberdade caótica que consagrou a série.\r\n\r\nNos bastidores, o grande destaque tecnológico está no comportamento dos NPCs e na densidade urbana. Das praias lotadas aos pântanos inspirados nos Everglades, cada região apresenta rotinas próprias, interações dinâmicas nas redes sociais dentro do universo do jogo e sistemas climáticos que alteram diretamente a física de direção e a visibilidade durante perseguições.\r\n\r\nPara o cenário de criadores de conteúdo e jogadores competitivos, o novo capítulo promete redefinir o padrão de imersão e longevidade nos mundos abertos, consolidando-se como o principal marco técnico desta geração de consoles e PCs.",
+    "autor": 4,
+    "status": "publicado",
+    "criado_em": "2026-11-25T03:57:21.678Z",
+    "atualizado_em": "2026-11-25T03:57:21.678Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 10,
+  "fields": {
+    "pagina": 4,
+    "titulo": "De um CRUD Simples a um Portal Editorial Multi-Tenant: Nossa Evolução em Laboratório de Programação Full Stack",
+    "conteudo": "Professor, este artigo resume a trajetória prática do que construí e aprendi ao longo da disciplina de Laboratório de Programação Full Stack, mostrando como o sistema saiu de um protótipo básico na P1 até chegar a esta plataforma editorial multi-tenant completa que estou usando agora para publicar este texto.\r\n\r\nNo início do projeto, o foco foi estruturar a base da aplicação com Django: modelagem relacional, rotas, formulários e o fluxo completo de criação, leitura, edição e exclusão de postagens, além da separação entre matérias publicadas e rascunhos. Com essa base funcionando, o próximo salto foi transformar o blog em um sistema multi-tenant de verdade. Implementei o isolamento lógico por organização através do vínculo entre usuários, perfis funcionais e páginas, garantindo que cada revista enxergue e gerencie exclusivamente os seus próprios conteúdos, sem risco de vazamento de dados entre tenants.\r\n\r\nNa sequência, evoluí a aplicação para expor uma API REST estruturada com Django REST Framework, permitindo que os dados fossem consumidos em JSON de forma padronizada e segura. Logo depois, mergulhei na parte de inteligência e métricas gerenciais: criei uma camada dedicada de agregações no banco de dados usando Count com filtros condicionais, rankings de autores mais ativos com annotate, séries temporais mensais com TruncMonth e visualização dinâmica no frontend com Chart.js.\r\n\r\nOutro aprendizado muito importante nessa etapa foi pensar em desempenho, segurança e controle de acesso por papel. Diferenciei na prática as permissões entre Dono e Editor da revista, restringindo o acesso às séries históricas e bloqueando a exportação de relatórios CSV com status 403 Forbidden para quem não é administrador. Também otimizei as consultas ao banco aplicando índices compostos e select_related para eliminar o problema de consultas N+1, validando tudo com testes automatizados e assertNumQueries.\r\n\r\nPor fim, além de implementar fluxos próprios de autenticação, cadastro de novas revistas e gestão de equipe diretamente pela interface web, refinei toda a identidade visual do portal para que a experiência de leitura e administração ficasse limpa, responsiva e próxima de uma plataforma editorial real. Cada funcionalidade aqui dentro representa um conceito da disciplina aplicado na prática e versionado passo a passo no GitHub.\r\n\r\nobs: Mesmo fazendo o uso da IA para me ajudar a resolver coisas nesse projeto, todo o conhecimento que foi passado em aula e pelo material do AVA fez uma grande diferença, porque eu poderia só pedir para a IA fazer e entregar logo de primeira o que ela me cuspisse, mas, juntamente do que ela retorna e dos conhecimentos que foram passados (mesmo que aos trancos e barrancos), consegui ver erros, corrigir coisas que não deveriam ser do jeito que ela me mandou e não só aceitar o que foi dado de primeira, e sim conseguir pedir do jeito certo o que eu queria e fazer do meu jeito. Obrigado pelos ensinamentos, professor, não sei se você vai ler isso, mas, se ler, tmj!!",
+    "autor": 5,
+    "status": "publicado",
+    "criado_em": "2026-11-25T04:13:47.143Z",
+    "atualizado_em": "2026-11-25T04:13:47.143Z"
+  }
+}
+]
