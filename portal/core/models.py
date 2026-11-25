@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Entidade central para o isolamento de dados (Multi-tenant)
+
 class Pagina(models.Model):
     nome = models.CharField(max_length=120)
     tag_oficial = models.CharField(max_length=50, unique=True)
@@ -9,21 +9,26 @@ class Pagina(models.Model):
     def __str__(self):
         return self.nome
 
-# Base abstrata para compartilhar a ForeignKey com os models de negócio sem duplicar código
+
 class DaOrganizacao(models.Model):
-    # Torna o vinculo obrigatorio para todos os novos inserts no banco
+    # Chave estrangeira base para isolamento multi-tenant
     pagina = models.ForeignKey(Pagina, on_delete=models.PROTECT)
 
     class Meta:
         abstract = True
 
-# Gerencia o vínculo do usuário com a página e seu nível de acesso na aplicação
+
 class PerfilFuncionario(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     pagina = models.ForeignKey(Pagina, on_delete=models.PROTECT)
     
     CARGOS = [('dono', 'Dono'), ('editor', 'Editor')]
     cargo = models.CharField(max_length=20, choices=CARGOS, default='editor')
+
+    @property
+    def eh_admin(self):
+        # Define privilégio administrativo para acesso a métricas e exportações
+        return self.cargo == 'dono'
 
     def __str__(self):
         return f"{self.usuario.username} - {self.cargo}"
