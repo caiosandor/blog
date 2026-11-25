@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — {{ pagina.nome }}</title>
+</head>
+<body>
+    <h1>Dashboard — {{ pagina.nome }}</h1>
+
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filtrar</button>
+        <a href="{% url 'dashboard' %}">Limpar</a>
+    </form>
+
+    {% if pode_exportar %}
+        <p><a href="{% url 'exportar-posts-csv' %}?{{ request.GET.urlencode }}">Exportar CSV</a></p>
+    {% endif %}
+
+    <div>
+        <div><small>Total de Posts:</small> <strong>{{ kpis.total_posts }}</strong></div>
+        <div><small>Publicados:</small> <strong>{{ kpis.publicados }}</strong></div>
+        <div><small>Rascunhos:</small> <strong>{{ kpis.rascunhos }}</strong></div>
+        <div><small>Autores Ativos:</small> <strong>{{ kpis.autores_ativos }}</strong></div>
+    </div>
+
+    <h2>Top 5 Autores</h2>
+    <table>
+        <thead>
+            <tr><th>Autor</th><th>Posts</th></tr>
+        </thead>
+        <tbody>
+            {% for item in ranking_autores %}
+                <tr>
+                    <td>{{ item.autor__first_name|default:item.autor__username }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="2">Sem publicações no período.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Distribuição por Status</h2>
+    <ul>
+        {% for item in distribuicao_status %}
+            <li>{{ item.status|capfirst }}: {{ item.total }}</li>
+        {% empty %}
+            <li>Sem dados no período.</li>
+        {% endfor %}
+    </ul>
+
+    {% if mostra_series %}
+        <h2>Publicações por Mês</h2>
+        <canvas id="graf-mes"></canvas>
+        <!-- Serialização segura dos dados para consumo no JavaScript -->
+        {{ por_mes|json_script:"dados-mes" }}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{% static 'js/dashboard.js' %}"></script>
+    {% endif %}
+</body>
+</html>
